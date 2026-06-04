@@ -1,5 +1,12 @@
 #include "shapes.h"
 
+Cube::Cube()
+{
+    position = {0.0f, 0.0f, 0.0f};
+    rotation = {0.0f, 0.0f, 0.0f};
+    scale = {1.0f, 1.0f, 1.0f};
+}
+
 void createVaoVbo(unsigned int *VAO, unsigned int *VBO)
 {
     float vertices[] =
@@ -74,4 +81,5 @@ void createVaoVbo(unsigned int *VAO, unsigned int *VBO)
 
     glBindVertexArray(*VAO);
 }
+
 

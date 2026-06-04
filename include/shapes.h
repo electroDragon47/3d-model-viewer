@@ -14,6 +14,7 @@ class Cube
     vec3f scale;
     unsigned int VAO;
     unsigned int VBO;
+    Cube();
 };
 
 void createVaoVbo(unsigned int *VAO, unsigned int *VBO);
