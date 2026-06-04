@@ -16,3 +16,4 @@ struct mat4f
 };
 
 mat4f create_translation(vec3f translation, vec3f rotation);
+mat4f create_perspective_projection(float fovy, float aspect, float near, float far);

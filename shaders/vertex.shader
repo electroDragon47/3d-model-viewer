@@ -6,9 +6,10 @@ out vec4 vertexColor;
 uniform vec3 scale;
 uniform mat4 model;
 uniform mat4 view;
+uniform mat4 projection;
 
 void main()
 {
-    gl_Position =  view * model *  vec4(aPos *scale, 1.0f);
+    gl_Position =  projection * view * model *  vec4(aPos *scale, 1.0f);
     vertexColor = vec4(aColor , 1.0f);
 }
