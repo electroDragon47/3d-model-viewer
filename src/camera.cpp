@@ -1,9 +1,10 @@
 #include "camera.h"
 
+float camera_z = -1.0f;
 
 Camera::Camera()
 {
-    position = {0.0f , 0.0f , -1.0f};
+    position = {0.0f , 0.0f , camera_z};
     rotation = {0.0f , 0.0f , 0.0f};
 
     // matrix to learn 
@@ -28,12 +29,21 @@ Camera::Camera()
     model_matrix.entries[15] = 1.0f;
 }
 
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    camera_z += yoffset;
+}
+    
 void Camera::Update(GLFWwindow *window, float dt)
 {
     if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) position.x += speed * dt;
     if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) position.x -= speed * dt;
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) position.y += speed * dt;
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) position.y -= speed * dt;
+
+    position.z = zoom_senstivity * camera_z;
+
+    glfwSetScrollCallback(window, scroll_callback);
 
     model_matrix.entries[0] = 1.0f;
     model_matrix.entries[1] = 0.0f;
@@ -53,6 +63,5 @@ void Camera::Update(GLFWwindow *window, float dt)
     model_matrix.entries[12] = -position.x;
     model_matrix.entries[13] = -position.y;
     model_matrix.entries[14] = position.z;
-    model_matrix.entries[15] = 1.0f;
-    
+    model_matrix.entries[15] = 1.0f; 
 }
