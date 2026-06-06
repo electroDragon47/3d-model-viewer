@@ -1,29 +1,6 @@
-#define GLEW_STATIC
+#include "project.h"
 
-#define WINDOW_HEIGHT 800
-#define WINDOW_WIDTH 1000
-
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
-
-#include <gl/glew.h>
-#include <GLFW/glfw3.h>
-
-#include "shader.h"
-#include "matrix.h"
-#include "shapes.h"
-#include "camera.h"
-
-class Light
-{
-    public:
-    vec3f position = {1.0f, 1.0f, 0.0f};
-    vec3f color = {1.0f, 1.0f, 1.0f}; 
-};
-
-
-int main(void)
+int main()
 {
     GLFWwindow* window;
 
@@ -42,6 +19,16 @@ int main(void)
 
     unsigned int shaderProgram = createShader("shaders/vertex.shader", "shaders/fragment.shader");
 
+    //  [importer.h and mesh.h is generated using ai, learn later]
+    // assimp
+    Importer importer;
+    importer.loadModel("assets/Pikachu_B.obj");
+    std::vector<Mesh> gpuMeshes;
+    for(const auto& meshData : importer.getMeshes())
+    {
+        gpuMeshes.emplace_back(meshData.vertices,meshData.indices);
+    }
+  
     // cube constructor
     Cube cube;
     Cube cube2;
@@ -74,17 +61,14 @@ int main(void)
     glUniformMatrix4fv(projection_loc,1,GL_FALSE, projection_matrix.entries);
     glUniform3fv(light_color_loc, 1, &lig.color.x);
 
-    float time_elapsed = 0.0f;
+    float time_elapsed = 0.0f; // for deltatime
 
+    
     glEnable(GL_DEPTH_TEST); // to enable depth ig
 
-    // Imgui
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    ImGui::StyleColorsDark();
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 330");
+    // imgui initialization
+    imguiinit(window);
+    
 
     while (!glfwWindowShouldClose(window))
     {
@@ -112,12 +96,21 @@ int main(void)
         glUniformMatrix4fv(camera_loc,1, GL_FALSE, camera.model_matrix.entries); // uploading view data (camera matrix)
         glUniform3fv(light_pos_loc,1,&lig.position.x);
 
-        glBindVertexArray(cube.VAO);
-        glDrawArrays(GL_TRIANGLES, 0 , 36);
+        // glBindVertexArray(cube.VAO);
+        // glDrawArrays(GL_TRIANGLES, 0 , 36);
 
-        glUniform3fv(scale_loc,1,&cube2.scale.x); // uploading scale data
-        glUniformMatrix4fv(model_loc,1,GL_FALSE, cube2_model.entries); // uploading modal data
-        glDrawArrays(GL_TRIANGLES, 0 , 36);
+        // glUniform3fv(scale_loc,1,&cube2.scale.x); // uploading scale data
+        // glUniformMatrix4fv(model_loc,1,GL_FALSE, cube2_model.entries); // uploading modal data
+        // glDrawArrays(GL_TRIANGLES, 0 , 36);
+
+
+        // ass imp 
+        for(auto& mesh : gpuMeshes)
+        {
+            mesh.draw();
+        }
+
+
 
         // impui rendering
         ImGui::Begin("Inspector");

@@ -3,6 +3,12 @@
 #define PI 3.14159
 #include <cmath>
 
+struct vec2f
+{
+    float x;
+    float y;
+};
+
 struct vec3f
 {
     float x;

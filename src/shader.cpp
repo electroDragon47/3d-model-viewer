@@ -5,19 +5,16 @@ std::string getShader(const char* path)
     std::ifstream shaderFile(path);
     if(!shaderFile.is_open())
     {
-        std::cout << "file not opne" << "\n";
+        std::cout << "file not open" << "\n";
     }
-    else if(shaderFile.is_open())
-    {
-        std::cout << "file opne" << "\n";
-    }
-    std::cout << path << "\n";
     std::string allText;
     std::string myText; 
     while (getline(shaderFile, myText))
     {
         allText += myText + '\n';
     }
+
+    shaderFile.close();
     return allText;
 }
 

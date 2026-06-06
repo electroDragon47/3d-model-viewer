@@ -9,4 +9,5 @@ float ambient = 0.2f;
 void main()
 {
   FragColor = vec4(vertexColor.rgb * (ambient + lightIntensity), 1.0f);
+  // FragColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }
