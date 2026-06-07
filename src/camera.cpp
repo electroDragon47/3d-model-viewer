@@ -33,6 +33,11 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera_z += yoffset;
 }
+
+void Camera::getUniformLocation(unsigned int shader)
+{
+    camera_loc = glGetUniformLocation(shader, "view");
+}
     
 void Camera::Update(GLFWwindow *window, float dt)
 {
@@ -64,4 +69,6 @@ void Camera::Update(GLFWwindow *window, float dt)
     model_matrix.entries[13] = -position.y;
     model_matrix.entries[14] = position.z;
     model_matrix.entries[15] = 1.0f; 
+
+    glUniformMatrix4fv(camera_loc,1, GL_FALSE, model_matrix.entries);
 }

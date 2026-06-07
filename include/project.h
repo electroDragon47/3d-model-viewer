@@ -1,5 +1,4 @@
 #pragma once
-#define GLEW_STATIC
 
 #define WINDOW_HEIGHT 800
 #define WINDOW_WIDTH 1000

@@ -5,6 +5,27 @@ Cube::Cube()
     position = {0.0f, 0.0f, 0.0f};
     rotation = {0.0f, 0.0f, 0.0f};
     scale = {1.0f, 1.0f, 1.0f};
+    createVaoVbo(&VAO,&VBO);
+}
+
+void Cube::getUniformLocation(unsigned int shader)
+{
+    scale_loc = glGetUniformLocation(shader, "scale");
+    model_loc = glGetUniformLocation(shader, "model");
+}
+
+
+void Cube::Update()
+{
+    glUniform3fv(scale_loc,1,&scale.x); // uploading scale data
+    model = create_translation(position, rotation);
+    glUniformMatrix4fv(model_loc,1,GL_FALSE, model.entries); 
+}
+
+void Cube::Draw()
+{
+    glBindVertexArray(VAO);
+    glDrawArrays(GL_TRIANGLES, 0 , 36);
 }
 
 void createVaoVbo(unsigned int *VAO, unsigned int *VBO)

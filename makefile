@@ -1,6 +1,6 @@
 CXX = g++
 
-SRC = src/*.cpp vendor\Imgui\src/*.cpp
+SRC = src/*.cpp vendor\Imgui\src/*.cpp -DGLEW_STATIC
 OUT = build\app.exe
 
 CXXFLAGS = -IC:\projects\OpenGL\3d-model-viewer\include -IC:\projects\OpenGL\3d-model-viewer\vendor\GLFW\include -IC:\projects\OpenGL\3d-model-viewer\vendor\GLEW\include -IC:\projects\OpenGL\3d-model-viewer\vendor\Imgui\include -IC:\projects\OpenGL\3d-model-viewer\vendor\assimp\include

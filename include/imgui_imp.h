@@ -6,3 +6,4 @@
 #include "imgui_impl_opengl3.h"
 
 void imguiinit(GLFWwindow* window);
+void imgui_newframe();

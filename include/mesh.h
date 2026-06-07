@@ -1,7 +1,6 @@
 #pragma once
 
 
-#define GLEW_STATIC
 #include <vector>
 
 class Mesh

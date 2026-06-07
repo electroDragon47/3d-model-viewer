@@ -2,8 +2,8 @@
 
 #include <GL/glew.h>
 
-Mesh::Mesh(const std::vector<float>& vertices,
-           const std::vector<unsigned int>& indices)
+Mesh::Mesh(const std::vector<float> &vertices,
+           const std::vector<unsigned int> &indices)
 {
     indexCount = indices.size();
 
@@ -31,8 +31,7 @@ Mesh::Mesh(const std::vector<float>& vertices,
         GL_FLOAT,
         GL_FALSE,
         6 * sizeof(float),
-        (void*)0
-    );
+        (void *)0);
     glEnableVertexAttribArray(0);
 
     glVertexAttribPointer(
@@ -41,8 +40,7 @@ Mesh::Mesh(const std::vector<float>& vertices,
         GL_FLOAT,
         GL_FALSE,
         6 * sizeof(float),
-        (void*)(3 * sizeof(float))
-    );
+        (void *)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
     glBindVertexArray(0);
@@ -56,6 +54,5 @@ void Mesh::draw()
         GL_TRIANGLES,
         indexCount,
         GL_UNSIGNED_INT,
-        nullptr
-    );
+        nullptr);
 }
