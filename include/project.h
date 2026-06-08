@@ -22,3 +22,4 @@
 #include "camera.h"
 #include "importer.h"
 #include "mesh.h"
+#include "loader.h"

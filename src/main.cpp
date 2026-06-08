@@ -2,9 +2,10 @@
 
 int main()
 {
-    std::string name;
-    std::cout << "Enter 3D model file path: ";
-    std::cin >> name;
+    // std::string name;
+    // // std::cout << "Enter 3D model file path: ";
+    // // std::cin >> name;
+    // name = "assets/Pikachu_B.obj";
 
     GLFWwindow* window;
 
@@ -23,16 +24,7 @@ int main()
 
     // unsigned int shaderProgram = createShader("shaders/vertex.shader", "shaders/fragment.shader");
     unsigned int importShader  = createShader("shaders/i_vertex.shader", "shaders/i_fragment.shader");
-
-    //  [importer.h and mesh.h is generated using ai, learn later]
-    // assimp
-    Importer importer;
-    importer.loadModel(name);
-    std::vector<Mesh> gpuMeshes;
-    for(const auto& meshData : importer.getMeshes())
-    {
-        gpuMeshes.emplace_back(meshData.vertices,meshData.indices);
-    }
+    
   
     // cube constructor
     Cube cube;
@@ -45,6 +37,7 @@ int main()
     mat4f  projection_matrix = create_perspective_projection(45.0f, screenAspectRatio, 0.1f, 10.0f);
 
     // uniform locations
+    glUseProgram(importShader);
     lig.getUniformLocation(importShader);
     cube.getUniformLocation(importShader);
     camera.getUniformLocation(importShader);
@@ -61,6 +54,8 @@ int main()
 
     // imgui initialization
     imguiinit(window);
+    std::vector<Mesh> gpuMeshes;
+    
     
 
     while (!glfwWindowShouldClose(window))
@@ -79,12 +74,31 @@ int main()
         lig.Update();
         // cube.Draw();
 
-        // ass imp 
         // glUseProgram(importShader);
         for(auto& mesh : gpuMeshes) mesh.draw();
 
         // impui rendering
-        ImGui::Begin("Inspector");
+        
+        ImGui::SetNextWindowPos(ImVec2(0, 0),ImGuiCond_Always);
+        ImGui::SetNextWindowSize(ImVec2(300, 300),ImGuiCond_Always);
+
+        ImGui::Begin("Inspector",nullptr,ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+        if (ImGui::Button("Load OBJ"))
+    {
+        std::string path = OpenFileDialog();
+
+        if (!path.empty())
+        {
+            printf("Selected: %s\n", path.c_str());
+            Importer importer;
+            importer.loadModel(path);
+    
+            for(const auto& meshData : importer.getMeshes())
+            {
+                gpuMeshes.emplace_back(meshData.vertices,meshData.indices);
+            }
+        }
+    }
         ImGui::Text("cube");
         ImGui::SliderFloat3("Position", &cube.position.x, -5.0f, 5.0f);
         ImGui::SliderFloat3("rotation", &cube.rotation.x, -180.0f, 180.0f);
