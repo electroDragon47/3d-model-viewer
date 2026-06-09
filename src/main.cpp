@@ -2,11 +2,6 @@
 
 int main()
 {
-    // std::string name;
-    // // std::cout << "Enter 3D model file path: ";
-    // // std::cin >> name;
-    // name = "assets/Pikachu_B.obj";
-
     GLFWwindow* window;
 
     if (!glfwInit()) return -1;
@@ -22,13 +17,15 @@ int main()
     glfwMakeContextCurrent(window);
     glewInit();
 
-    // unsigned int shaderProgram = createShader("shaders/vertex.shader", "shaders/fragment.shader");
+    unsigned int shaderProgram = createShader("shaders/vertex.shader", "shaders/fragment.shader");
     unsigned int importShader  = createShader("shaders/i_vertex.shader", "shaders/i_fragment.shader");
     
   
     // cube constructor
     Cube cube;
     Light lig;
+    Model pikachu;
+    pikachu.import("assets/pikachu_B.obj");
 
     // camera 
     Camera camera;
@@ -37,12 +34,23 @@ int main()
     mat4f  projection_matrix = create_perspective_projection(45.0f, screenAspectRatio, 0.1f, 10.0f);
 
     // uniform locations
+    // glUseProgram(importShader);
+    // lig.getUniformLocation(importShader);
+    // cube.getUniformLocation(importShader);
+    // camera.getUniformLocation(importShader);
+    // lig.getUniformLocation(importShader);
+
+    cube.getUniformLocation(shaderProgram);
+    camera.getUniformLocation(shaderProgram);
+
     glUseProgram(importShader);
-    lig.getUniformLocation(importShader);
-    cube.getUniformLocation(importShader);
-    camera.getUniformLocation(importShader);
+    pikachu.getUniformLocation(importShader);
+    unsigned int camera_loc = glGetUniformLocation(importShader, "view");
 
     // projection
+    // unsigned int projection_loc = glGetUniformLocation(shaderProgram, "projection");
+    // glUniformMatrix4fv(projection_loc,1,GL_FALSE, projection_matrix.entries);
+
     unsigned int projection_loc = glGetUniformLocation(importShader, "projection");
     glUniformMatrix4fv(projection_loc,1,GL_FALSE, projection_matrix.entries);
     
@@ -54,12 +62,13 @@ int main()
 
     // imgui initialization
     imguiinit(window);
-    std::vector<Mesh> gpuMeshes;
     
     
 
     while (!glfwWindowShouldClose(window))
     {
+        
+        glUseProgram(shaderProgram);
         // delta time
         float current_time = glfwGetTime();
         float deltaTime = current_time - time_elapsed;
@@ -67,42 +76,42 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         imgui_newframe();
-
-        // glUseProgram(shaderProgram);
         cube.Update();
         camera.Update(window, deltaTime);
         lig.Update();
-        // cube.Draw();
-
-        // glUseProgram(importShader);
-        for(auto& mesh : gpuMeshes) mesh.draw();
+        cube.Draw();
+        glUseProgram(importShader);
+        glUniformMatrix4fv(camera_loc,1,GL_FALSE, camera.model_matrix.entries);
+        pikachu.Update();
+        pikachu.meshDraw();
 
         // impui rendering
+        std::cout << "loop running" << "\n";
+
         
         ImGui::SetNextWindowPos(ImVec2(0, 0),ImGuiCond_Always);
         ImGui::SetNextWindowSize(ImVec2(300, 300),ImGuiCond_Always);
 
         ImGui::Begin("Inspector",nullptr,ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-        if (ImGui::Button("Load OBJ"))
-    {
-        std::string path = OpenFileDialog();
+    //     if (ImGui::Button("Load OBJ"))
+    // {
+    //     std::string path = OpenFileDialog();
 
-        if (!path.empty())
-        {
-            printf("Selected: %s\n", path.c_str());
-            Importer importer;
-            importer.loadModel(path);
+    //     if (!path.empty())
+    //     {
+    //         printf("Selected: %s\n", path.c_str());
+    //         Importer importer;
+    //         importer.loadModel(path);
     
-            for(const auto& meshData : importer.getMeshes())
-            {
-                gpuMeshes.emplace_back(meshData.vertices,meshData.indices);
-            }
-        }
-    }
-        ImGui::Text("cube");
-        ImGui::SliderFloat3("Position", &cube.position.x, -5.0f, 5.0f);
-        ImGui::SliderFloat3("rotation", &cube.rotation.x, -180.0f, 180.0f);
-        ImGui::SliderFloat3("scale", &cube.scale.x, 0.0f, 5.0f);
+    //         for(const auto& meshData : importer.getMeshes())
+    //         {
+    //             gpuMeshes.emplace_back(meshData.vertices,meshData.indices);
+    //         }
+    //     }
+    // }
+        cube.DrawUI();
+        pikachu.DrawUI();
+        camera.DrawUI();
         ImGui::SliderFloat3("lightPosition", &lig.position.x, -5.0f, 5.0f);
         ImGui::End();
 
@@ -117,9 +126,7 @@ int main()
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
-    glDeleteVertexArrays(1, &cube.VAO);
-    glDeleteBuffers(1, &cube.VBO);
-    glDeleteProgram(importShader);
+    glDeleteProgram(shaderProgram);
     glfwTerminate();
     return 0;
 }

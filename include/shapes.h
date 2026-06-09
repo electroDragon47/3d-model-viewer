@@ -5,6 +5,10 @@
 #include <iostream>
 #include "matrix.h"
 
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+
 
 class Cube
 {
@@ -21,6 +25,8 @@ class Cube
     void getUniformLocation(unsigned int shader);
     void Update();
     void Draw();
+    void DrawUI();
+    ~Cube();
 
 };
 

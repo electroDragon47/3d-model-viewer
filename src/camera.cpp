@@ -1,6 +1,6 @@
 #include "camera.h"
 
-float camera_z = -1.0f;
+float camera_z = -5.0f;
 
 Camera::Camera()
 {
@@ -71,4 +71,11 @@ void Camera::Update(GLFWwindow *window, float dt)
     model_matrix.entries[15] = 1.0f; 
 
     glUniformMatrix4fv(camera_loc,1, GL_FALSE, model_matrix.entries);
+}
+
+void Camera::DrawUI()
+{
+    ImGui::Text("camera");
+    ImGui::SliderFloat3("Position##camera", &position.x, -5.0f, 5.0f);
+    ImGui::SliderFloat3("rotation##camera", &rotation.x, -180.0f, 180.0f);
 }

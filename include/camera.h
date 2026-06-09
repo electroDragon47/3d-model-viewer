@@ -4,7 +4,9 @@
 #include "matrix.h"
 #include "GLFW/glfw3.h"
 #include <iostream>
-
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 class Camera
 {
     public:
@@ -17,6 +19,7 @@ class Camera
     Camera();
     void getUniformLocation(unsigned int shader);
     void Update(GLFWwindow *window, float dt);
+    void DrawUI();
 };
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);

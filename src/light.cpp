@@ -2,7 +2,7 @@
 
 Light::Light()
 {
-    position = {1.0f, 1.0f, 0.0f};
+    position = {1.0f, 1.0f, 2.0f};
     color = {1.0f, 1.0f, 1.0f};
     
 }
