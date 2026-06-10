@@ -19,3 +19,9 @@ void Light::Update()
     glUniform3fv(pos_loc,1,&position.x);
 }
 
+void Light::DrawUI()
+{
+    ImGui::Text("Directional Light");
+    ImGui::SliderFloat3("lightPosition", &position.x, -5.0f, 5.0f);
+}
+
