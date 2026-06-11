@@ -1,6 +1,7 @@
 #version 330 core
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
+layout (location = 2) in vec2 aUV;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -14,9 +15,11 @@ vec3 worldPos;
 vec3 lightVector;
 vec3 normal;
 out float lightIntensity;
+out vec2 uv;
 
 void main()
 {
+    uv = aUV;
     gl_Position = projection * view * model * vec4(aPos * scale, 1.0f);
     worldPos = vec3(model * vec4(aPos * scale, 1.0f));
     lightVector = normalize(lightPos - worldPos); // got the vector

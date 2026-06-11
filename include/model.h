@@ -17,12 +17,13 @@ class Vertex
 public:
     vec3f position;
     vec3f normal;
+    vec2f UV;
 };
 
 class Model
 {
 public:
-    
+    GLuint textureID;
     unsigned int vao;
     unsigned int vbo;
     unsigned int ebo;
@@ -37,6 +38,7 @@ public:
 
     unsigned int model_loc;
     unsigned int scale_loc;
+    GLuint textureLoc;
 
     Model();
     void getUniformLocation(unsigned int shader);
